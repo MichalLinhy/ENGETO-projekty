@@ -48,13 +48,13 @@ if registrovani_uzivatele.get(username) != password:    #podmínka, pokud se jm�
 else:
     print(cara)     #pokud se shodují
     print(f"""Welcome to the app, {username}
-We have 3 texts to be analyzed""")
+We have {len(TEXTS)} texts to be analyzed""")
     print(cara)
     
     #VÝBĚR TEXTU
-    cislo_textu = input("Enter a number btw. 1 and 3 to select: ")     #pokud projde přes přihlášení, vybere číslo textu podle indexu z "TEXTS"
+    cislo_textu = input(f"Enter a number btw. 1 and {len(TEXTS)} to select: ")     #pokud projde přes přihlášení, vybere číslo textu podle indexu z "TEXTS"
     
-    if cislo_textu not in ["1", "2", "3"]:  #pokud vybere jiné čislo, než je od 1 do 3, ukončí program
+    if not cislo_textu.isdigit() or not (1 <= int(cislo_textu) <= len(TEXTS)):  #pokud vybere jiné čislo, než je od 1 do 3, ukončí program
         print("Invalid selection, terminating the program.. ")
 
     else:
@@ -65,29 +65,27 @@ We have 3 texts to be analyzed""")
         pocet_slov = len(slova)
         
         pocet_titlecase = 0     #počet slov začínajících velkým písmenem
+        pocet_uppercase = 0     #počet slov psaných velkými písmeny
+        pocet_lowercase = 0     #počet slov psaných malými písmeny
+        pocet_numeric = 0       #počet slov, která jsou číslice
+        soucet_numeric = 0      #součet hodnoty číslic
+       
         for slovo in slova:
+            slovo = slovo.strip(",.?!")  # očištění od znaků
+
             if slovo.istitle():
                 pocet_titlecase += 1
-        
-        pocet_uppercase = 0     #počet slov psaných velkými písmeny
-        for slovo in slova:
-            if slovo.isupper():
+            
+            elif slovo.isupper():
                 pocet_uppercase += 1
-       
-        pocet_lowercase = 0     #počet slov psaných malými písmeny
-        for slovo in slova:
-            if slovo.islower():
+            
+            elif slovo.islower():
                 pocet_lowercase += 1
 
-        pocet_numeric = 0       #počet slov, která jsou číslice
-        for slovo in slova:
-            if slovo.isdigit():
+            if slovo.isdigit():  # součet čísel a jejich počet
                 pocet_numeric += 1
-
-        soucet_numeric = 0      #součet hodnoty číslic
-        for slovo in slova:
-            if slovo.isdigit():
-                soucet_numeric += int(slovo)    #převod slova na výběr čísla
+                soucet_numeric += int(slovo)  # převod slova na číslo
+               
 
         print("There are", pocet_slov, "words in the selected text.")   
         print("There are", pocet_titlecase, "titlecase words." )    
@@ -110,4 +108,7 @@ We have 3 texts to be analyzed""")
         print("LEN|     OCCURENCES     |NR.")    #hlavička grafu
         print("----------------------------------------")   #čára
         for delka in sorted(delky_slov):    #seřazení 
-            print(f"{delka:4}| {'*' * delky_slov[delka]:17} |{delky_slov[delka]}")
+            print(f"{delka:3}| {'*' * delky_slov[delka]:18} |{delky_slov[delka]}")
+
+
+            
